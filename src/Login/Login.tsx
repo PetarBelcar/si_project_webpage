@@ -25,6 +25,16 @@ function Login() {
     const [password, setPassword] = useState<string>("");
     const [quate, setQuate] = useState<string>("");
 
+    enum status {
+        none,
+        success,
+        failure,
+    }
+    const [statusMessage, setStatusMessage] = useState<{
+        status: status;
+        message: string;
+    }>({ status: status.none, message: "" });
+
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const { key, repeat } = event;
         if (!repeat && key.length === 1) {
@@ -54,6 +64,44 @@ function Login() {
             events: events,
         };
         console.log(requestBody);
+
+        makeRequest(requestBody);
+    };
+
+    const makeRequest = (body: {
+        username: string;
+        password: string;
+        events: { type: string; timestamp: number }[];
+    }) => {
+        fetch("localhost:8000", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        })
+            .then((respnse) => {
+                if (respnse.ok) return respnse.json;
+                else throw new Error("Could not connect to the server");
+            })
+            .then((data) => {
+                handleResponseSuccess(data);
+            })
+            .catch((data) => {
+                handleResponseFailure(data);
+            });
+    };
+
+    const handleResponseSuccess = (responseData: any) => {
+        console.log("Success");
+        setStatusMessage({status: status.success, message: "Successful authentication"});
+        console.log(responseData);
+    };
+
+    const handleResponseFailure = (responseData: any) => {
+        console.error("Failure");
+        setStatusMessage({status: status.failure, message: "Authentication failed"});
+        console.log(responseData);
     };
 
     return (
@@ -84,6 +132,8 @@ function Login() {
                 />
             </div>
             <button onClick={(_event) => handleLogin()}>Login</button>
+            <br />
+            <p>{statusMessage.message}</p>
         </div>
     );
 }
