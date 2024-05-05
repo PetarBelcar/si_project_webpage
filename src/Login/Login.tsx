@@ -57,23 +57,20 @@ function Login() {
     };
 
     const handleLogin = () => {
-        console.log(events);
         const requestBody = {
             username: username,
             password: password,
             events: events,
         };
-        console.log(requestBody);
-
         makeRequest(requestBody);
     };
 
-    const makeRequest = (body: {
+    const makeRequest = async (body: {
         username: string;
         password: string;
         events: { type: string; timestamp: number }[];
     }) => {
-        fetch("localhost:8000/receive_data", {
+        fetch("http://localhost:8000/receive_data", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -81,8 +78,7 @@ function Login() {
             body: JSON.stringify(body),
         })
             .then((respnse) => {
-                console.log(respnse);
-                if (respnse.ok) return respnse.json;
+                if (respnse.ok) return respnse.json();
                 else throw new Error("Could not connect to the server");
             })
             .then((data) => {
@@ -94,15 +90,25 @@ function Login() {
     };
 
     const handleResponseSuccess = (responseData: any) => {
-        console.log("Success");
-        setStatusMessage({status: status.success, message: "Successful authentication"});
         console.log(responseData);
+        if (responseData["typing"]) {
+            setStatusMessage({
+                status: status.success,
+                message: "Successful authentication",
+            });
+        } else {
+            setStatusMessage({
+                status: status.failure,
+                message: "Authentication failed",
+            });
+        }
     };
 
-    const handleResponseFailure = (responseData: any) => {
-        console.error("Failure");
-        setStatusMessage({status: status.failure, message: "Authentication failed"});
-        console.log(responseData);
+    const handleResponseFailure = (_responseData: any) => {
+        setStatusMessage({
+            status: status.failure,
+            message: "Failed to connect to server",
+        });
     };
 
     return (
