@@ -60,16 +60,16 @@ function Login() {
         const requestBody = {
             username: username,
             password: password,
-            events: events,
+            events: events.map((x) => {
+                x.timestamp = (x.timestamp - events[1].timestamp) / 1000;
+                return x;
+            }),
         };
+        console.log(requestBody);
         makeRequest(requestBody);
     };
 
-    const makeRequest = async (body: {
-        username: string;
-        password: string;
-        events: { type: string; timestamp: number }[];
-    }) => {
+    const makeRequest = async (body: any) => {
         fetch("http://localhost:8000/receive_data", {
             method: "POST",
             headers: {
