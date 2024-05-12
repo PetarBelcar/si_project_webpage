@@ -112,9 +112,10 @@ function Login() {
     };
 
     return (
-        <div>
+        <div style={styles.container}>
             <p>Username</p>
             <input
+                style={styles.input}
                 type="text"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
@@ -122,27 +123,73 @@ function Login() {
             <br />
             <p>Password</p>
             <input
+                style={styles.input}
                 type="text"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
             />{" "}
             <br />
+            <p>Quote</p>
             <div key={0}>
-                <span>{randomQuate}</span> <br />
+                <span style={styles.quoteContainer}>{randomQuate}</span> <br />
                 <input
                     type="text"
                     value={quate}
                     onChange={(event) => handleInputChange(event)}
                     onKeyDown={(event) => handleKeyDown(event)}
                     onKeyUp={(event) => handleKeyUp(event)}
-                    style={{ width: "300px" }}
+                    style={styles.input}
                 />
             </div>
-            <button onClick={(_event) => handleLogin()}>Login</button>
+            <button style={styles.button} onClick={(_event) => handleLogin()}>
+                Login
+            </button>
             <br />
             <p>{statusMessage.message}</p>
         </div>
     );
 }
+
+const styles: { [key: string]: React.CSSProperties } = {
+    container: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "20px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        maxWidth: "400px",
+        margin: "auto",
+    },
+    input: {
+        width: "100%",
+        marginBottom: "10px",
+        padding: "8px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        boxSizing: "border-box",
+    },
+    quoteContainer: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginBottom: "10px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        padding: "10px",
+    },
+    button: {
+        backgroundColor: "#007bff",
+        color: "#fff",
+        border: "none",
+        padding: "10px 20px",
+        borderRadius: "5px",
+        cursor: "pointer",
+    },
+    statusMessage: {
+        marginTop: "10px",
+        color: "red",
+    },
+};
 
 export default Login;
