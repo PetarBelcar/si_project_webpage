@@ -35,6 +35,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         padding: "10px 20px",
         borderRadius: "5px",
         cursor: "pointer",
+        margin: "2px",
     },
 };
 
